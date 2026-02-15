@@ -1,10 +1,11 @@
 from textnode import TextNode, TextType
 
 
-def main():
+def main() -> None:
 
     text_node = TextNode("testing text", TextType.LINK, "https://www.boot.dev")
     print(text_node)
 
 
-main()
+if __name__ == "__main__":
+    main()
