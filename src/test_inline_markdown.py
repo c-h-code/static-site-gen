@@ -82,6 +82,10 @@ class TestInline(unittest.TestCase):
         )
         self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
 
+    def test_extract_markdown_links(self):
+        matches = extract_markdown_links("This is text with an [link](www.google.com)")
+        self.assertListEqual([("link", "www.google.com")], matches)
+
     def test_split_images(self):
         node = TextNode(
             "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png) and another ![second image](https://i.imgur.com/3elNhQu.png)",
