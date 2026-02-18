@@ -40,7 +40,7 @@ class LeafNode(HTMLNode):
         if not self.value:
             raise ValueError()
         elif not self.tag:
-            raise ValueError()
+            return self.value
         else:
             if self.props:
                 return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
