@@ -128,6 +128,14 @@ def markdown_to_html_node(markdown):
         html_nodes.append(html_node)   
         
     return ParentNode("div", html_nodes)
+
+def extract_title(markdown):
+    lines = markdown.split("\n")
+    for line in lines:
+        if line.startswith("# "):
+            return line[2:]
+    raise Exception("No header in markdown")
+    
                 
                 
 

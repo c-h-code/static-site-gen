@@ -1,6 +1,6 @@
 import unittest
 
-from block_markdown import BlockType, block_to_block_type, markdown_to_blocks, markdown_to_html_node
+from block_markdown import BlockType, block_to_block_type, extract_title, markdown_to_blocks, markdown_to_html_node
 
 
 class TestBlockMarkdown(unittest.TestCase):
@@ -145,3 +145,31 @@ This is another paragraph with _italic_ text and `code` here
         )
 
 
+    def test_header_extract(self):
+        markdown = """
+# Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+        """
+        self.assertEqual(extract_title(markdown), "Tolkien Fan Club")
+
+    def test_header_extract(self):
+            markdown = """
+## Tolkien Fan Club
+
+![JRR Tolkien sitting](/images/tolkien.png)
+
+Here's the deal, **I like Tolkien**.
+
+> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien
+        """
+            with self.assertRaises(Exception):
+                extract_title(markdown) 
