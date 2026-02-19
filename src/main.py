@@ -7,7 +7,7 @@ def main() -> None:
     shutil.rmtree("public/")
     os.mkdir("public/")
     copy_static_and_push("static/" , "public/")
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_all_pages("content/", "public/")
     
 def copy_static_and_push(copy_dir, dest_dir):
     files = os.listdir(copy_dir)
@@ -39,6 +39,13 @@ def generate_page(from_path,template_path, dest_path):
         f.write(template)
 
     
+def generate_all_pages(source_dir, dest_dir):
+    files = os.listdir(source_dir)
+    for file in files:
+        if os.path.isfile(os.path.join(source_dir, file)):
+            generate_page(os.path.join(source_dir, file), "template.html", os.path.join(dest_dir, file).replace(".md", ".html"))
+        else:
+            generate_all_pages(os.path.join(source_dir,file), os.path.join(dest_dir,file))
 
 
          
