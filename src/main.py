@@ -1,13 +1,18 @@
 import shutil
+import sys
 from block_markdown import extract_title, markdown_to_html_node
 from textnode import TextNode, TextType
 import os
 
 def main() -> None:
-    shutil.rmtree("public/")
-    os.mkdir("public/")
-    copy_static_and_push("static/" , "public/")
-    generate_all_pages("content/", "public/")
+    if len(sys.argv) > 1:
+        base_path = sys.argv[1]
+    else:
+        base_path = "/"
+    shutil.rmtree("docs/")
+    os.mkdir("docs/")
+    copy_static_and_push("static/" , "docs/")
+    generate_all_pages("content/", "docs/", base_path)
     
 def copy_static_and_push(copy_dir, dest_dir):
     files = os.listdir(copy_dir)
@@ -20,7 +25,7 @@ def copy_static_and_push(copy_dir, dest_dir):
 
 
 
-def generate_page(from_path,template_path, dest_path):
+def generate_page(from_path,template_path, dest_path, base_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
     with open(from_path,"r") as f:
         markdown = f.read()
@@ -31,7 +36,8 @@ def generate_page(from_path,template_path, dest_path):
     title = extract_title(markdown)
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html)
-
+    template = template.replace('href="/', f'href="{base_path}')
+    template = template.replace('src="/', f'src="{base_path}')
     dest_dir_path = os.path.dirname(dest_path)
     if dest_dir_path:
         os.makedirs(dest_dir_path, exist_ok=True)
@@ -39,13 +45,13 @@ def generate_page(from_path,template_path, dest_path):
         f.write(template)
 
     
-def generate_all_pages(source_dir, dest_dir):
+def generate_all_pages(source_dir, dest_dir, base_path):
     files = os.listdir(source_dir)
     for file in files:
         if os.path.isfile(os.path.join(source_dir, file)):
-            generate_page(os.path.join(source_dir, file), "template.html", os.path.join(dest_dir, file).replace(".md", ".html"))
+            generate_page(os.path.join(source_dir, file), "template.html", os.path.join(dest_dir, file).replace(".md", ".html"), base_path)
         else:
-            generate_all_pages(os.path.join(source_dir,file), os.path.join(dest_dir,file))
+            generate_all_pages(os.path.join(source_dir,file), os.path.join(dest_dir,file),base_path)
 
 
          
